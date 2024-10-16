@@ -1,0 +1,50 @@
+services:
+  web:
+    image: wordpress
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 80:80
+    networks:
+      - frontend
+      - backend
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: 123456
+      WORDPRESS_DB_NAME: wordpress
+      # WORDPRESS_CONFIG_EXTRA: |
+      #   define('WP_HOME', 'https://jfnandopr-probable-adventure-9v49r67qv2x-80.preview.app.github.dev');
+      #   define('WP_SITEURL', 'https://jfnandopr-probable-adventure-9v49r67qv2x-80.preview.app.github.dev');
+    volumes:
+      - wordpress:/var/www/html
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: '123456'
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - backend
+      
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8081:8080
+    networks:
+      - backend
+
+volumes:
+  wordpress:
+  db:
+
+networks:
+  frontend:
+  backend:

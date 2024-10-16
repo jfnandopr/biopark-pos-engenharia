@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - main
+  create:
+    tags:
+      - v*
+
+jobs:
+  release:
+    name: Criar Release
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+        
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '8'
+
+      - name: Compile
+        run: ./grailsw compile
+
+      - name: Run tests
+        run: ./grailsw test-app

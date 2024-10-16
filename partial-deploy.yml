@@ -1,0 +1,29 @@
+deploy:
+  name: Deploy AWS
+  runs-on: ubuntu-latest
+  needs: release
+  strategy:
+    matrix:
+      instance-id: ['i-065bf757b81fe517f']
+      
+  steps:
+    - name: Install AWS CLI 
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install --update
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+        
+    - name: Deploy to AWS
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ec2-54-233-243-169.sa-east-1.compute.amazonaws.com
+        username: ubuntu
+        key: ${{ secrets.AWS_ECS_SSH_KEY }}
+        script: cd /home/ubuntu && sudo docker-compose up -d

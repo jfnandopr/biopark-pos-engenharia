@@ -1,0 +1,28 @@
+name: CI/CD
+
+on:
+  push:
+    branches: 
+      - main
+  create:
+    tags:
+      - v*
+
+jobs:
+  release:
+    name: Criar Release
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+        
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      - name: Compile
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
