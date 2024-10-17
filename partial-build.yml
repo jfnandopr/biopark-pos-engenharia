@@ -14,7 +14,7 @@
   id: meta
   uses: docker/metadata-action@v4
   with:
-    images: ${{ secrets.DOCKERHUB_USERNAME }}/my-grails-app
+    images: ${{ secrets.DOCKERHUB_USERNAME }}/api
     
 - name: Build and push
   uses: docker/build-push-action@v3
